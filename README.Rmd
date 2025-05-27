@@ -13,7 +13,7 @@ MultiScaleABM is an R package that implements a stochastic age-stratified agent-
 
 ## 📦 Installation
 
-You can install the package from source:
+You can install the package from source using the following command in R:
 
 ```r
 # In the package root directory
@@ -28,19 +28,21 @@ Make sure you have a working C++ toolchain (Rtools on Windows, Xcode on Mac, bui
 library(MultiScaleABM)
 
 params <- list(
-  n_agents = 1000,
-  n_days = 30,
+  n_agents = 1e4,
+  n_days = 180,
   contact_matrix = matrix(c(0.1, 0.05, 0.01,
                             0.05, 0.1, 0.02,
                             0.01, 0.02, 0.1),
                           nrow = 3, byrow = TRUE),
   age_groups = c(0.2, 0.5, 0.3),
-  k = c(0.1, 0.2, 0.15),
-  gamma = c(0.05, 0.07, 0.06),
-  sigma = c(0.01, 0.02, 0.015),
-  beta = 0.001,
-  dt = 1,
-  VL_days = 10,
+  k = c(0.03, 0.03, 0.03),
+  gamma = c(0.01, 0.01, 0.01),
+  sigma = c(0.01, 0.01, 0.01),
+  beta = 10,
+  dt = 0.01,
+  VL_days = 20,
+  V0 = log(0.1),
+  dV0 = 3,
   recovery_rate = 0.1,
   n_initial_infected = 10
 )
@@ -51,7 +53,7 @@ plot(out$daily_infected, type = "l", col = "red", main = "Daily Infected", ylab 
 
 ## 📈 Viral Load Simulation
 
-The function `simulate_viral_load()` implements a stochastic second-order differential equation to simulate within-host viral load dynamics. It uses the Euler–Maruyama method, a numerical technique for solving stochastic differential equations (SDEs), to generate smooth and biologically plausible viral load trajectories.
+The viral load dynamics are modelled with a stochastic second-order differential equation. It uses the Euler–Maruyama method, a numerical technique for solving stochastic differential equations (SDEs), to generate smooth and biologically plausible viral load trajectories.
 
 ### 🧠 Model Overview
 
