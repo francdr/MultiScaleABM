@@ -21,6 +21,23 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// simulate_viral_load
+std::vector<double> simulate_viral_load(int days, double dt, double V0, double dV0, double k, double gamma, double sigma);
+RcppExport SEXP _MultiScaleABM_simulate_viral_load(SEXP daysSEXP, SEXP dtSEXP, SEXP V0SEXP, SEXP dV0SEXP, SEXP kSEXP, SEXP gammaSEXP, SEXP sigmaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type days(daysSEXP);
+    Rcpp::traits::input_parameter< double >::type dt(dtSEXP);
+    Rcpp::traits::input_parameter< double >::type V0(V0SEXP);
+    Rcpp::traits::input_parameter< double >::type dV0(dV0SEXP);
+    Rcpp::traits::input_parameter< double >::type k(kSEXP);
+    Rcpp::traits::input_parameter< double >::type gamma(gammaSEXP);
+    Rcpp::traits::input_parameter< double >::type sigma(sigmaSEXP);
+    rcpp_result_gen = Rcpp::wrap(simulate_viral_load(days, dt, V0, dV0, k, gamma, sigma));
+    return rcpp_result_gen;
+END_RCPP
+}
 // test_viral_load_trajectory
 Rcpp::NumericVector test_viral_load_trajectory(int age_group, double dt, int VL_days, double I0, double baseline, Rcpp::NumericVector k, Rcpp::NumericVector gamma, Rcpp::NumericVector sigma);
 RcppExport SEXP _MultiScaleABM_test_viral_load_trajectory(SEXP age_groupSEXP, SEXP dtSEXP, SEXP VL_daysSEXP, SEXP I0SEXP, SEXP baselineSEXP, SEXP kSEXP, SEXP gammaSEXP, SEXP sigmaSEXP) {
@@ -42,6 +59,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_MultiScaleABM_run_abm", (DL_FUNC) &_MultiScaleABM_run_abm, 1},
+    {"_MultiScaleABM_simulate_viral_load", (DL_FUNC) &_MultiScaleABM_simulate_viral_load, 7},
     {"_MultiScaleABM_test_viral_load_trajectory", (DL_FUNC) &_MultiScaleABM_test_viral_load_trajectory, 8},
     {NULL, NULL, 0}
 };

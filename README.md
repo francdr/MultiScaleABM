@@ -134,8 +134,3 @@ stochastic viral load model.
 If you use this package in your research, please cite it appropriately.
 
 ------------------------------------------------------------------------
-
-Feel free to open issues or pull requests to extend or improve the
-model.
-
-Developed by …

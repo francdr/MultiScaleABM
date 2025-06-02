@@ -27,6 +27,8 @@ using namespace Rcpp;
 //   return w;
 // }
 
+
+// [[Rcpp::export]]
 std::vector<double> simulate_viral_load(int days, double dt,
                                         double V0, double dV0,
                                         double k, double gamma, double sigma)
@@ -42,9 +44,10 @@ std::vector<double> simulate_viral_load(int days, double dt,
   {
     double dW = R::rnorm(0.0, std::sqrt(dt));
     double ddV = -k * V[t - 1] - gamma * dV[t - 1];
-    dV[t] = dV[t - 1] + ddV * dt;
-    V[t]  = V[t - 1] + dV[t] * dt + sigma * dW;
-    Y[t]  = Y[t - 1] + Y[t - 1] * dV[t] * dt + 0.5 * Y[t - 1] * sigma * sigma * dt;
+    dV[t] = dV[t - 1] + ddV * dt ;
+    V[t]  = V[t - 1] + dV[t] * dt+ sigma * dW ;
+    //Y[t]  = Y[t - 1] + Y[t - 1] * dV[t] * dt + 0.5 * Y[t - 1] * sigma * sigma * dt;
+    Y[t] = std::exp(V[t]);
   }
 
   // Compute daily averages

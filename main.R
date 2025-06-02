@@ -10,20 +10,20 @@ params <- list(
                             0.01, 0.02, 0.1),
                           nrow = 3, byrow = TRUE),
   age_groups = c(0.2, 0.5, 0.3),
-  k = c(0.03, 0.03, 0.03),
-  gamma = c(0.01, 0.01, 0.01),
-  sigma = c(0.01, 0.01, 0.01),
+  k = c(0.05, 0.05, 0.05),
+  gamma = c(0.3, 0.3, 0.3),
+  sigma = c(0.25, 0.25, 0.25),
   beta = 10,
-  dt = 0.01,
+  dt = 0.0005,
   VL_days = 20,
-  V0 = log(0.1),
-  dV0 = 3,
+  V0 = log(0.01),
+  dV0 = 10,
   recovery_rate = 0.1,
   n_initial_infected = 10
 )
 
-# Check viral load trajectory
-plot_viral_load_trajectory(params = params)
+# Check viral load trajectory. If spaghetti=T, plot N stochastic trajectories
+plot_viral_load_trajectory(params = params, spaghetti = T, N=100)
 
 # Run the agent-based model
 out <- run_abm(params)

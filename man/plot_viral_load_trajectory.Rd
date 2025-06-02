@@ -4,7 +4,7 @@
 \alias{plot_viral_load_trajectory}
 \title{Plot viral load trajectory for one individual}
 \usage{
-plot_viral_load_trajectory(age_group = NULL, params, I0 = 0.1, baseline = 0)
+plot_viral_load_trajectory(age_group = NULL, params)
 }
 \arguments{
 \item{age_group}{Index of the age group (starting at 0). If NULL, one is sampled.}
