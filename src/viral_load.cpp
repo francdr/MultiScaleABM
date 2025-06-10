@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+#include <random>
 #include "header.hpp"
 
 using namespace Rcpp;
@@ -27,23 +28,25 @@ using namespace Rcpp;
 //   return w;
 // }
 
-
-// [[Rcpp::export]]
 std::vector<double> simulate_viral_load(int days, double dt,
                                         double V0, double dV0,
-                                        double k, double gamma, double sigma)
+                                        double k, double gamma, double sigma,
+                                        std::mt19937& rng)
 {
+
   int n_steps = static_cast<int>(days / dt);
   std::vector<double> V(n_steps), dV(n_steps), Y(n_steps);
   V[0] = V0;
   dV[0] = dV0;
   Y[0] = std::exp(V0);
+  std::normal_distribution<> rnorm(0.0, std::sqrt(dt));
 
   // Simulate viral dynamics
   for (int t = 1; t < n_steps; ++t)
   {
-    double dW = R::rnorm(0.0, std::sqrt(dt));
+    double dW = rnorm(rng);
     double ddV = -k * V[t - 1] - gamma * dV[t - 1];
+
     dV[t] = dV[t - 1] + ddV * dt ;
     V[t]  = V[t - 1] + dV[t] * dt+ sigma * dW ;
     //Y[t]  = Y[t - 1] + Y[t - 1] * dV[t] * dt + 0.5 * Y[t - 1] * sigma * sigma * dt;
@@ -105,9 +108,12 @@ Rcpp::NumericVector test_viral_load_trajectory(int age_group,
                                                Rcpp::NumericVector gamma,
                                                Rcpp::NumericVector sigma)
 {
+  // Define RNG using a fixed or variable seed for reproducibility
+  std::random_device rd;
+  std::mt19937 rng(rd());  // Or use a fixed seed like std::mt19937 rng(42);
 
   std::vector<double> vl = simulate_viral_load(VL_days, dt, I0, baseline,
-                                               k[age_group], gamma[age_group], sigma[age_group]);
+                                               k[age_group], gamma[age_group], sigma[age_group], rng);
 
   return Rcpp::wrap(vl);
 }
