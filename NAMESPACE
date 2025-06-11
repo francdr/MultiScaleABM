@@ -2,6 +2,6 @@
 
 export(plot_viral_load_trajectory)
 export(run_abm)
-export(simulate_viral_load)
+#export(simulate_viral_load)
 importFrom(Rcpp,evalCpp)
 useDynLib(MultiScaleABM, .registration = TRUE)

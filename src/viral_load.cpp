@@ -98,6 +98,60 @@ std::vector<double> simulate_viral_load(int days, double dt,
   return w;
 }
 
+std::vector<double> simulate_viral_load_v2(int days, double dt,
+                                           double V0, double dV0,
+                                           double k, double gamma, double sigma,
+                                           std::mt19937& rng)
+{
+
+  int n_steps = static_cast<int>(days / dt);
+  std::vector<double> V(n_steps), dV(n_steps), Y(n_steps);
+  V[0] = V0;
+  dV[0] = dV0;
+  Y[0] = std::exp(V0);
+  std::normal_distribution<> rnorm(0.0, std::sqrt(dt));
+
+  // Simulate viral dynamics
+  for (int t = 1; t < n_steps; ++t)
+  {
+    double dW = rnorm(rng);
+    double ddV = -k * V[t - 1] - gamma * dV[t - 1];
+
+    dV[t] = dV[t - 1] + ddV * dt ;
+    V[t]  = V[t - 1] + dV[t] * dt+ sigma * dW ;
+    //Y[t]  = Y[t - 1] + Y[t - 1] * dV[t] * dt + 0.5 * Y[t - 1] * sigma * sigma * dt;
+    Y[t] = std::exp(V[t]);
+  }
+
+  // Compute daily averages
+  std::vector<double> daily_Y(days, 0.0);
+  int steps_per_day = static_cast<int>(1.0 / dt);
+
+  for (int d = 0; d < days; ++d)
+  {
+    double sum = 0.0;
+    int count = 0;
+
+    // Average over time steps within day d
+    for (int t = d * steps_per_day; t < (d + 1) * steps_per_day && t < n_steps; ++t)
+    {
+      sum += Y[t];
+      count++;
+    }
+
+    if (count > 0)
+    {
+      daily_Y[d] = sum / count;
+    }
+    else
+    {
+      daily_Y[d] = 0.0;
+    }
+  }
+
+  return daily_Y;
+}
+
 // [[Rcpp::export]]
 Rcpp::NumericVector test_viral_load_trajectory(int age_group,
                                                double dt,
@@ -112,7 +166,7 @@ Rcpp::NumericVector test_viral_load_trajectory(int age_group,
   std::random_device rd;
   std::mt19937 rng(rd());  // Or use a fixed seed like std::mt19937 rng(42);
 
-  std::vector<double> vl = simulate_viral_load(VL_days, dt, I0, baseline,
+  std::vector<double> vl = simulate_viral_load_v2(VL_days, dt, I0, baseline,
                                                k[age_group], gamma[age_group], sigma[age_group], rng);
 
   return Rcpp::wrap(vl);

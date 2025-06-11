@@ -145,7 +145,7 @@ List run_abm(List params) {
     int ag = agents[idx].age_group;
 
     agents[idx].infect( 0, // infection starts at day 0
-                        simulate_viral_load(VL_days, dt, V0, dV0, k[ag], gamma[ag], sigma[ag], rng));
+                        simulate_viral_load_v2(VL_days, dt, V0, dV0, k[ag], gamma[ag], sigma[ag], rng));
   }
 
   // ===========================================================================
@@ -242,7 +242,7 @@ List run_abm(List params) {
             if ( runif(rng) < pi_by_age[ag])
             {
               // Simulate viral load trajectory for new infection
-              auto vload = simulate_viral_load(
+              auto vload = simulate_viral_load_v2(
                             VL_days, dt, V0, dV0,
                             k[ag], gamma[ag], sigma[ag], rng);
 
@@ -421,7 +421,7 @@ List run_abm(List params) {
                 if (runif(rng_local) < pi_by_age[ag])
                 {
                   // Simulate viral load trajectory for new infection
-                  auto vload = simulate_viral_load(
+                  auto vload = simulate_viral_load_v2(
                                 VL_days, dt, V0, dV0,
                                 k[ag], gamma[ag], sigma[ag], rng_local);
                   agents[i].infect(day, vload);

@@ -20,25 +20,30 @@ stopifnot(abs( sum(age_distribution/sum(age_distribution)) - 1) < 1e-6)  # sanit
 # Set Parameters
 # ------------------------------------------------------------------------------
 
+
 params <- list(
+  # ABM parameters
   n_agents = 1e5,
   n_days = 180,
   contact_matrix = contact_matrix,
   age_groups = age_distribution,
+  # Viral load parameters
   k = rep(0.06, length(age_distribution)),
   gamma = rep(0.3, length(age_distribution)),
-  sigma = rep(0.36, length(age_distribution)),
-  beta = 0.08,
+  sigma = rep(0.2, length(age_distribution)),
+  beta = 1.8e-5,
   dt = 0.05,
   VL_days = 20,
   V0 = log(0.06),
   dV0 = 5,
+  # Simulation parameters
   n_initial_infected = 10,
-  recovery_threshold = 0.01,
+  recovery_threshold = 20,#0.01,
   parallel = TRUE,
   n_threads = 12,
   verbose = T
 )
+
 
 
 # ------------------------------------------------------------------------------

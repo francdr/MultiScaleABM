@@ -31,26 +31,38 @@ Mac, build-essential on Linux).
 ## 🧪 Usage Example
 
 ``` r
-library(MultiScaleABM)
+# ------------------------------------------------------------------------------
+# Load contact matrix and age distribution from CSV files
+# ------------------------------------------------------------------------------
+
+contact_matrix   <- as.matrix(read.csv("data/contact_matrix.csv",    header = FALSE))
+age_distribution <- as.numeric(read.csv("data/age_distribution.csv", header = FALSE)[, 2])
+
+# ------------------------------------------------------------------------------
+# Set Parameters
+# ------------------------------------------------------------------------------
 
 params <- list(
-  n_agents = 1e4,
+  # ABM parameters
+  n_agents = 1e5,
   n_days = 180,
-  contact_matrix = matrix(c(0.1, 0.05, 0.01,
-                            0.05, 0.1, 0.02,
-                            0.01, 0.02, 0.1),
-                          nrow = 3, byrow = TRUE),
-  age_groups = c(0.2, 0.5, 0.3),
-  k = c(0.05, 0.05, 0.05),
-  gamma = c(0.3, 0.3, 0.3),
-  sigma = c(0.25, 0.25, 0.25),
-  beta = 10,
-  dt = 0.0005,
+  contact_matrix = contact_matrix,
+  age_groups = age_distribution,
+  # Viral load parameters
+  k = rep(0.06, length(age_distribution)),
+  gamma = rep(0.3, length(age_distribution)),
+  sigma = rep(0.2, length(age_distribution)),
+  beta = 1.8e-5,
+  dt = 0.05,
   VL_days = 20,
-  V0 = log(0.01),
-  dV0 = 10,
-  recovery_rate = 0.1,
-  n_initial_infected = 10
+  V0 = log(0.06),
+  dV0 = 5,
+  # Simulation parameters
+  n_initial_infected = 10,
+  recovery_threshold = 20,#0.01,
+  parallel = TRUE,
+  n_threads = 12,
+  verbose = T
 )
 
 out <- run_abm(params)
@@ -69,7 +81,6 @@ generate smooth and biologically plausible viral load trajectories.
 The viral load trajectory is governed by:
 
 ``` math
-
 \frac{d^2V}{dt^2} = -kV - \gamma \frac{dV}{dt} + \sigma \eta(t)
 ```
 
@@ -84,18 +95,10 @@ Where:
 This is discretized using Euler–Maruyama:
 
 ``` math
-
 \begin{align*}
 \text{dV}[t+1] &= \text{dV}[t] + (-k \cdot V[t] - \gamma \cdot \text{dV}[t]) \cdot dt \\
 V[t+1] &= V[t] + \text{dV}[t] \cdot dt + \sigma \cdot \sqrt{dt} \cdot \mathcal{N}(0,1)
 \end{align*}
-```
-
-The exponential of $`V`$ is normalized:
-
-``` math
-
-Y[t] = \frac{\exp(V[t])}{\max_t \exp(V[t])}
 ```
 
 ### 🔧 Parameters
@@ -135,9 +138,3 @@ can generate a spaghetti plot with N viral load trajectories:
 ``` r
 plot_viral_load_trajectory(params = params, spaghetti = TRUE, N = 50)
 ```
-
-## 📚 Citation
-
-If you use this package in your research, please cite it appropriately.
-
-------------------------------------------------------------------------

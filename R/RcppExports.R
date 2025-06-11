@@ -5,10 +5,6 @@ run_abm <- function(params) {
     .Call(`_MultiScaleABM_run_abm`, params)
 }
 
-simulate_viral_load <- function(days, dt, V0, dV0, k, gamma, sigma) {
-    .Call(`_MultiScaleABM_simulate_viral_load`, days, dt, V0, dV0, k, gamma, sigma)
-}
-
 test_viral_load_trajectory <- function(age_group, dt, VL_days, I0, baseline, k, gamma, sigma) {
     .Call(`_MultiScaleABM_test_viral_load_trajectory`, age_group, dt, VL_days, I0, baseline, k, gamma, sigma)
 }
