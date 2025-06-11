@@ -106,7 +106,7 @@ $$
 
 ### 🧪 Output
 
-A normalized vector of relative viral load over time — suitable for use in transmission models.
+A  vector of viral load over time — suitable for use in transmission models.
 
 ## 📊 Plotting Viral Load Trajectories
 

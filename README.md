@@ -115,8 +115,8 @@ V[t+1] &= V[t] + \text{dV}[t] \cdot dt + \sigma \cdot \sqrt{dt} \cdot \mathcal{N
 
 ### 🧪 Output
 
-A normalized vector of relative viral load over time — suitable for use
-in transmission models.
+A vector of viral load over time — suitable for use in transmission
+models.
 
 ## 📊 Plotting Viral Load Trajectories
 
